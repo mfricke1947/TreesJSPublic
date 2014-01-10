@@ -1,4 +1,6 @@
 
+3. 1/10/2014 Barwise Tree Controller finished (and working, though not thoroughly tested)
+
 2. 1/5/2014 Initial Commit to GIT (no Barwise Anacon Tree)
 
 --------------------------------------------

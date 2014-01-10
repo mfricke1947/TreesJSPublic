@@ -16,6 +16,7 @@ import us.softoption.parser.THausmanParser;
 import us.softoption.parser.THerrickParser;
 import us.softoption.parser.THowsonParser;
 import us.softoption.parser.TParser;
+import us.softoption.tree.TBarwiseTreeController;
 import us.softoption.tree.TGWTTree;
 import us.softoption.tree.TGWTTreeInputPanel;
 import us.softoption.tree.TTreeController;
@@ -98,7 +99,10 @@ public class TreesJS implements EntryPoint, TJournal, TReset {
     
     Button fExtendButton= new Button("Extend",new ClickHandler(){@Override 
 				public void onClick(ClickEvent event) {
-    			fTreeController.extendTree();}});	
+    			fTreeController.extendTree();}});
+    Button fAnaConButton= new Button("Ana Con",new ClickHandler(){@Override 
+				public void onClick(ClickEvent event) {
+    			fTreeController.executeAnaCon();}});
     Button fCloseButton= new Button("Close",new ClickHandler(){@Override 
 		public void onClick(ClickEvent event) {
 		fTreeController.closeBranch();}});
@@ -115,6 +119,7 @@ public class TreesJS implements EntryPoint, TJournal, TReset {
 
 	
 	static boolean fPropLevel=false;
+	boolean fBarwise=false;          // with AnaCon, significantly different
 	
 	static final boolean HIGHLIGHT = true;
 	
@@ -278,7 +283,21 @@ void buildMenuButtons(){
 	
 	initializeMenuButtons(menuButtons,dummy);
 	
-	RootPanel.get("menubuttons").add(fMenuButtonsPanel);
+	if (RootPanel.get("menubuttons")!=null)
+		RootPanel.get("menubuttons").add(fMenuButtonsPanel);
+	
+}
+
+void buildBarwiseMenuButtons(){
+	Widget[] menuButtons={fExtendButton, fAnaConButton,fCloseButton, fIsClosedButton, 
+			fOpenBranchButton};
+	
+	int dummy=0;
+	
+	initializeMenuButtons(menuButtons,dummy);
+	
+	if (RootPanel.get("menubuttons")!=null)
+		RootPanel.get("menubuttons").add(fMenuButtonsPanel);
 	
 }
 
@@ -399,7 +418,10 @@ if (fDebug)
 
 buildMenus();
 
-buildMenuButtons();
+if (fBarwise)
+	buildBarwiseMenuButtons();
+else
+	buildMenuButtons();
 
 buildModalMenuButtons();
  
@@ -594,6 +616,10 @@ void setLocalParameters(){
 	
 	{ String parser =TPreferencesData.fParser;
 	if (parser!=null) {
+		if (parser.equals("barwise")){
+			fBarwise=true;
+			fParser =new THowsonParser();  //use Howson for Barwise
+			}
 		if (parser.equals("bergmann")){
 			   fParser =new TBergmannParser();
 			   //fEtoL.resetToBergmannRules();
@@ -624,8 +650,11 @@ void setLocalParameters(){
 	}
 	}
 	
-	fDisplayTable= new TTreeDisplayCellTable();;
-	fTreeController=new TTreeController (fParser,this,this,fInputPanel,fGWTTree,fDisplayTable);
+	fDisplayTable= new TTreeDisplayCellTable();
+	if (fBarwise){
+		fTreeController=new TBarwiseTreeController (fParser,this,this,fInputPanel,fGWTTree,fDisplayTable);
+	}else
+		fTreeController=new TTreeController (fParser,this,this,fInputPanel,fGWTTree,fDisplayTable);
 	
 }
 	

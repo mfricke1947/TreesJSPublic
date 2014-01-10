@@ -1318,7 +1318,9 @@ public void executeII(){
 	}
 }
 
-
+public void executeAnaCon(){
+	  //stub
+}
 
 
 public boolean isTreeClosed(){
@@ -1893,7 +1895,9 @@ public boolean isABranchOpenAndComplete(){
 		 fDisplayTableModel.treeChanged(TTreeDisplayTableModel.ROWCHANGE,dummy);
 		}		
 		
-		
+
+  
+  
 		void doAnd(TGWTTestNode selected,TFormula theFormula, int depthIncrement){
 		    TFormula leftFormula=theFormula.fLLink.copyFormula();
 
