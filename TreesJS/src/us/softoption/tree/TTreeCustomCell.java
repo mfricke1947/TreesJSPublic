@@ -43,18 +43,64 @@ public class TTreeCustomCell extends AbstractCell<Object>/*<String>*/ {
 		          +"style=\"stroke:black;stroke-width:2\"/></svg>"; */
 	
 	//height=\"20\" 
+
 	
 	static String svgLeftDiag="<img "
-		    +"src=\"images/leftDiag.png\" style=\"width:100%; height:100%;\">"
+		    +"src=\"images/leftDiag.png\" style=\"width:100%; height:16px;\">"
 	        +"</img>";
+	        
+	/*old
+	static String svgLeftDiag="<hr "
+		    +"style=\"height:10px;border:none;"
+			+"transform:rotate(-45deg);transform-origin: top right; "
+			+"-ms-transform:rotate(-45deg); -ms-transform-origin: top right;"
+		    +"-moz-transform:rotate(-45deg); -moz-transform-origin: top right; "
+			+"-webkit-transform:rotate(-45deg);-webkit-transform-origin: top right; "
+		    +"-o-transform:rotate(-45deg);-o-transform-origin: top right;\" "
+	        +"/>";	
+*/
+	        
+	        
 	static String svgVertical="<img "
-		    +"src=\"images/vertical.png\" style=\"height:100%;\">"
+		    +"src=\"images/vertical.png\" style=\"width:40%;height:100%;\">"
 	        +"</img>";  //don't make it width 100%, don't want it fat
+						// have left the width
+	
+	//Feb 2014 width new
+	
+/*old	
 	static String svgRightDiag="<img "
 		    +"src=\"images/rightDiag.png\" style=\"width:100%; height:100%;\">"
 	        +"</img>";
+	
+*/	
+	
+	static String svgRightDiag="<img "
+		    +"src=\"images/rightDiag.png\" style=\"width:100%; height:16px;\">"
+	        +"</img>";
+			
+			
+			/*"<hr "
+			 +"style=\"height:10px;"
+			 + "transform:rotate(45deg);transform-origin: top left; "
+				+"-ms-transform:rotate(45deg); -ms-transform-origin: top left;"
+			    +"-moz-transform:rotate(45deg); -moz-transform-origin: top left; "
+				+"-webkit-transform:rotate(45deg);-webkit-transform-origin: top left; "
+			    +"-o-transform:rotate(45deg);-o-transform-origin: top left;\" "
+		        +"/>";*/
+	
+	/*
+	 * transform:rotate(45deg);
+-ms-transform:rotate(5deg); 
+-moz-transform:rotate(5deg); 
+-webkit-transform:rotate(5deg);
+-o-transform:rotate(5deg);
+	 * 
+	 */
+	
+	
 	static String svgHorizontal="<img "
-		    +"src=\"images/horizontal.png\" style=\"width:100%; height:100%;\">"
+		    +"src=\"images/horizontal.png\" style=\"width:100%; height:16px;\">"
 	        +"</img>";
 	
 //	images used to be .svg not .png
@@ -106,7 +152,7 @@ public class TTreeCustomCell extends AbstractCell<Object>/*<String>*/ {
       SafeHtml cell(SafeHtml value);
     }                                //#00FF00
 
-    /**
+    /** 
      * Create a singleton instance of the templates used to render the cell.
      */
     private static Templates templates = GWT.create(Templates.class);	
@@ -311,14 +357,16 @@ public class TTreeCustomCell extends AbstractCell<Object>/*<String>*/ {
     			  if (valueNode.fSelected==true)
     				  valueNode.fSelected=false;
     			  else
-    				  valueNode.fSelected=true;     	
-    			  doAction(value, valueUpdater);
+    				  valueNode.fSelected=true;
+    			  boolean redrawOnly=true;
+    			  doAction(value, valueUpdater,redrawOnly); // this causes the undersirable autoscrolling
     		  }
-    		  this.resetFocus(context, parent, valueUpdater);  //get the focus for scrolling
+    		  else	 // new Feb 2014
+    			  this.resetFocus(context, parent, valueUpdater);  //get the focus for scrolling
       }      
     }   
     
-    private void doAction(Object value, ValueUpdater<Object> valueUpdater) {
+    private void doAction(Object value, ValueUpdater<Object> valueUpdater, boolean redrawOnly) {
         // Alert the user that they selected a value.
     //    Window.alert("You selected the color " + value);
 
@@ -327,7 +375,10 @@ public class TTreeCustomCell extends AbstractCell<Object>/*<String>*/ {
         // was clicked.
        
         if (fListener!=null)
-        	fListener.doRefresh();
+        	fListener.doRefresh(redrawOnly);
+        
+        //the refresh listener is the indexed column in TTreeDisplayCellTable and that calls a full
+        //synchronize which is too much, now we have redraw only
         
         //valueUpdater.update(value);
       }

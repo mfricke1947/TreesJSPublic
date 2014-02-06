@@ -3,6 +3,6 @@ package us.softoption.tree;
 
 public interface TTreeRefreshListener {
 	
-void doRefresh();
+void doRefresh(boolean redrawOnly);
 	
 }

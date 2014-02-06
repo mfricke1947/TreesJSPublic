@@ -76,6 +76,10 @@ public class TTreeController{
 
 	  // these following do not want to be static because there can be several panels open at once
 
+	  // in some html settings we want non-breaking spaces here asciichr160
+	  // so, for example, it does not make a table column narrow
+	  // intend to use s = s.replaceAll(" ","\u00a0");  when needed
+	  
 	  String andDJustification = " " + Symbols.chAnd + "D";
 	  String negDJustification = " ~~D";
 	  String implicDJustification = " " + Symbols.chImplic + "D";

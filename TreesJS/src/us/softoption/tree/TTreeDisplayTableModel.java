@@ -173,6 +173,34 @@ public int getColumnCount(){             /*branches*2 +1 */
       (branches*2)+1;*/
 }
 
+public int getColumnMaxWidth(int index){  //returns maxwidth in number of characters
+	int max=0;
+	TGWTTestNode value;
+	String valueStr;
+	
+	if (index>=0&&index<fColumnCount){
+		for(int i=0;i<fRowCount;i++){
+			if (isTestNode(i,index)){
+				value =(TGWTTestNode)getValueAt(i,index);
+				
+				valueStr=value.toString();
+				
+				if (valueStr.length()>max)
+					max=valueStr.length();
+				
+				
+		 		  if ( ((TGWTTestNode)value).fDead)
+	    			  max+=1; //squareRoot;        // tick the dead ones	
+			
+			}
+		}
+	}
+	
+
+	return
+			max;
+}
+
 public int getRowCount(){
   return
       fRowCount;
@@ -199,6 +227,13 @@ public Object getValueAt(int row, int column){
   return
       fData[row][column];
 }
+
+public boolean isTestNode(int row, int column){
+	return
+			!isSelectable(row,column);
+	
+}
+
 
 public boolean isSelectable(int row, int column){
 
@@ -324,7 +359,8 @@ PlacementData join(TGWTTestNode joinNode,PlacementData subtree1,PlacementData su
     int lineNo=joinNode.fLineno;
     int justNo=joinNode.fFirstjustno;
     int secondJustNo=joinNode.fSecondjustno;
-    String justification = joinNode.fJustification;
+    String justification = replaceBreakingWithNonBreakingSpace(joinNode.fJustification); 
+
 
     if (lineNo>0)
       output.fData[0][0]= new Integer(lineNo);
@@ -402,7 +438,7 @@ PlacementData extend(TGWTTestNode extendNode,PlacementData subtree1){
       int lineNo=extendNode.fLineno;
       int justNo=extendNode.fFirstjustno;
       int secondJustNo=extendNode.fSecondjustno;
-      String justification = extendNode.fJustification;
+      String justification = replaceBreakingWithNonBreakingSpace(extendNode.fJustification);
 
       if (lineNo>0)
         output.fData[0][0]= new Integer(lineNo);
@@ -491,7 +527,7 @@ PlacementData leaf(TGWTTestNode leaf){
     int lineNo=leaf.fLineno;
     int justNo=leaf.fFirstjustno;
     int secondJustNo=leaf.fSecondjustno;
-    String justification = leaf.fJustification;
+    String justification = replaceBreakingWithNonBreakingSpace(leaf.fJustification);
 
     if (lineNo>0)
       output.fData[0][0]= new Integer(lineNo);
@@ -976,10 +1012,14 @@ fDisplay.synchronizeViewToData();
 
 
 
+/*Sometimes their entirely separate column width algorithm wraps on 
+ * space and makes columns too narrow
+ */
 
-
-
-
+String replaceBreakingWithNonBreakingSpace(String s){
+	return
+	 s.replaceAll(" ","\u00a0");  
+}
 
 }
 

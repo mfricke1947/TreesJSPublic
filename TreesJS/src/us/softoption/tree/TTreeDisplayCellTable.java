@@ -5,6 +5,7 @@ package us.softoption.tree;
 import java.util.Arrays;
 import java.util.List;
 
+import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.Column;
 
@@ -49,6 +50,11 @@ We do this here as an array of Objects i.e.Object[]
 /*We deal with selection by looking at clicks on out Custom Cells
  * The Nodes of the tree have a fSelected field which is toggled on
  * and off on Click.*/
+
+/*check also
+ * http://www.gwtproject.org/doc/latest/DevGuideUiCellTable.html
+ * on column width
+ */
 
 public class TTreeDisplayCellTable extends CellTable<Object[]>{
 private TTreeDisplayTableModel fTreeTableModel=new TTreeDisplayTableModel();
@@ -103,6 +109,12 @@ public TTreeController getController(){
 
 
 public void synchronizeViewToData(){
+	int NUMWIDTH=30;
+	int JUSTWIDTH=60;
+	
+	// Set the width of the table and put the table in fixed width mode.
+   // this.setWidth("100%", true);  //Feb2014
+    
 	 
 	
 	if (fTreeTableModel!=null){  //updating display from the model
@@ -137,9 +149,23 @@ public void synchronizeViewToData(){
 		
 		this.setRowCount(rows, true);
 		
+		IndexedColumn column;
+		
 		for (int i=0;i<cols;i++){
 			//this.addColumn(new IndexedColumn(i), Integer.toString(i));
-			this.addColumn(new IndexedColumn(i)/*, Integer.toString(i)*/);
+			
+			column=new IndexedColumn(i);  //Feb2014
+			
+		/*	if (i==0)
+				this.setColumnWidth(column, NUMWIDTH, Unit.PX);  //line nos
+			else
+				if (i==cols-1)
+					this.setColumnWidth(column, JUSTWIDTH, Unit.PX);  //justification
+				else
+					this.setColumnWidth(column, 100/(cols-2), Unit.PCT);  */
+			
+			this.addColumn(column/*, Integer.toString(i)*/
+		/*	,new ResizableHeader("one", this, column)*/); //Feb2014
 		}
 
 		this.setRowData(rowList);
@@ -172,7 +198,10 @@ class IndexedColumn extends Column<Object[], /*String*/Object> implements TTreeR
 	    		  (object[this.index])/*.toString()*/;
 	   }
 	   
-	public   void doRefresh(){
+	public   void doRefresh(boolean redrawOnly){
+		if (redrawOnly)
+		   redraw();
+		else
 		   synchronizeViewToData();
 		   
 	   }
