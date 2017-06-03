@@ -220,10 +220,16 @@ public TGWTTestNode (){
 
 }
 
+
+
 public TGWTTestNode (String displayStr){
-	super(displayStr);
+/*2015 unsure about this	super(displayStr); */
+	
+	super.setText(displayStr);  //new 2015
 
 }
+
+
 
 public TGWTTestNode (TParser aParser,TGWTTree aTree){
   fParser=aParser;

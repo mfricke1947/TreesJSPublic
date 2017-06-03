@@ -283,7 +283,7 @@ public static String fTermTruncate= "*term*";
 public static String fCompTruncate= "*{}*";
 public static String fLongTruncate= "*long*";
 
-private boolean fVerbose=false; // for writing out extra info
+protected boolean fVerbose=false; // for writing out extra info
 
 private boolean fFirstOrder=true;  //was false, changed JAN 09
 
@@ -4945,7 +4945,7 @@ public void writeListOfTerms(TFormula head)
 
 //must call this prior to parse
 
-private void initializeInputBuffer(){
+protected void initializeInputBuffer(){
 
 fInputBuffer= new char[3];
 fInputBuffer[0]=chBlank;
@@ -5238,7 +5238,7 @@ private boolean lambdaWffCheck (TFormula root, ArrayList newValuation){
    }
 
 
-private String readName(char start){
+protected String readName(char start){
 String outStr="";
 
 /*our identifiers start  */
